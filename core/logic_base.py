@@ -1,53 +1,66 @@
-# logic_base.py
+# core/logic_base.py
 # Version: 2025-08-15
-# This file contains the core universal basic logic rules for the Pre-ULAI project.
+# Purpose: Stores and recalls universal basic logic rules persistently
 
-from datetime import datetime
+import json
+import os
 
-class LogicBase:
-    """
-    A foundational class to hold and evaluate basic universal logic rules.
-    """
+RULES_FILE = "core/logic_rules.json"
 
-    def __init__(self):
-        self.rules = []
-        self.created_at = datetime.utcnow()
+def load_rules():
+    """Load rules from JSON file, or return an empty list if none exist."""
+    if os.path.exists(RULES_FILE):
+        with open(RULES_FILE, "r", encoding="utf-8") as f:
+            try:
+                return json.load(f)
+            except json.JSONDecodeError:
+                return []
+    return []
 
-    def add_rule(self, description: str):
-        """
-        Add a new basic logic rule to the system.
-        """
-        self.rules.append({
-            "description": description,
-            "added_at": datetime.utcnow()
-        })
+def save_rules(rules):
+    """Save rules to JSON file."""
+    with open(RULES_FILE, "w", encoding="utf-8") as f:
+        json.dump(rules, f, indent=2, ensure_ascii=False)
 
-    def list_rules(self):
-        """
-        Return a list of all stored rules.
-        """
-        return self.rules
+def add_rule(rules, new_rule):
+    """Add a new rule if it doesn't already exist."""
+    if new_rule not in rules:
+        rules.append(new_rule)
+        print(f"✅ Added rule: {new_rule}")
+    else:
+        print(f"⚠️ Rule already exists: {new_rule}")
+    return rules
 
-    def evaluate_rule(self, index: int):
-        """
-        Placeholder for evaluating a rule.
-        For now, it simply returns the rule description.
-        """
-        if 0 <= index < len(self.rules):
-            return self.rules[index]["description"]
+def list_rules(rules):
+    """Print all rules."""
+    if not rules:
+        print("No rules stored yet.")
+    else:
+        print("\n📜 Stored Universal Logic Rules:")
+        for idx, rule in enumerate(rules, start=1):
+            print(f"{idx}. {rule}")
+
+def main():
+    rules = load_rules()
+
+    while True:
+        print("\nOptions: [1] List rules  [2] Add rule  [3] Exit")
+        choice = input("Choose: ").strip()
+
+        if choice == "1":
+            list_rules(rules)
+        elif choice == "2":
+            new_rule = input("Enter new universal logic rule: ").strip()
+            if new_rule:
+                rules = add_rule(rules, new_rule)
+                save_rules(rules)
+        elif choice == "3":
+            save_rules(rules)
+            print("💾 Rules saved. Goodbye.")
+            break
         else:
-            return "Rule index out of range."
+            print("❌ Invalid option.")
 
 if __name__ == "__main__":
-    lb = LogicBase()
-    
-    # Example rules from our universal logic discussion
-    lb.add_rule("Energy flows outward from a core; matter flows inward from surroundings.")
-    lb.add_rule("Hot fire and cold fuel form a continuous interaction cycle.")
-    lb.add_rule("The universe operates on gradual, cyclic transformations, not a single starting point.")
-    
-    print(f"Logic Base created at: {lb.created_at}")
-    print("Current Universal Basic Rules:")
-    for i, rule in enumerate(lb.list_rules()):
-        print(f"{i+1}. {rule['description']}")
+    main()
 
