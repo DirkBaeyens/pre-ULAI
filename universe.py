@@ -1,5 +1,4 @@
 from core import UniversalLogic
-from agents import Particle
 
 class Universe:
     def __init__(self):
@@ -12,4 +11,8 @@ class Universe:
     def step(self):
         for e in self.entities:
             self.logic.apply_rules(e)
+
+    def summary(self):
+        for e in self.entities:
+            print(e)
 

@@ -3,10 +3,16 @@ from agents import Particle
 
 if __name__ == "__main__":
     uni = Universe()
-    p1 = Particle("SeedParticle")
+    
+    # Add inner and outer entities
+    p1 = Particle("CoreSeed", layer="inner", spin=2)
+    p2 = Particle("OuterCloud", layer="outer", spin=1)
+    
     uni.add_entity(p1)
+    uni.add_entity(p2)
 
-    for _ in range(5):
+    for i in range(5):
+        print(f"--- Step {i+1} ---")
         uni.step()
-        print(f"{p1.name} -> Energy: {p1.energy}, Matter: {p1.matter}")
+        uni.summary()
 
