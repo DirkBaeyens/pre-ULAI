@@ -67,4 +67,26 @@ The AI will have:
 - Multi-scale approach from atoms → solar systems → cosmic structures
 - Emphasis on open, transparent reasoning, independent of institutional science
 
+---
+
+## [2025-08-15 17:08] – Initial Project Structure and Workflow Setup
+
+**Changes:**
+- Created `CHANGELOG.md` for tracking code version updates.
+- Updated `README.md` to describe the purpose of the project and initial setup instructions.
+- Created `core/logic_base.py` to hold the fundamental universal logic rules.
+- Added version timestamp format `YYYY-MM-DD HH:MM` in code headers for accurate tracking.
+- Created `SESSION_SUMMARY.md` to document ongoing progress and decisions.
+
+**Reasoning / Decisions:**
+- A clear changelog and session summary make the project easier to maintain and hand over if needed.
+- Centralizing universal logic in `logic_base.py` gives a stable foundation for building the AI’s reasoning.
+- Adding timestamps ensures we can distinguish multiple updates per day.
+
+**Next Steps:**
+- Begin implementing the first universal logic reasoning loop.
+- Test local execution flow and confirm integration with existing files.
+- Keep SESSION_SUMMARY.md updated after each major step.
+
+---
 
