@@ -1,4 +1,3 @@
-# Core universal logic rules
 class UniversalLogic:
     def __init__(self):
         self.rules = {
@@ -12,13 +11,18 @@ class UniversalLogic:
         }
 
     def apply_rules(self, obj):
-        # Energy flows outward, matter flows inward
         obj.energy += 1 * obj.spin
         obj.matter += 0.5  # slow inflow
-        # Outer layers accumulate more matter, inner layers more energy
         if obj.layer == "inner":
             obj.energy += 1
         else:
             obj.matter += 1
+
+        # apply entity-specific rules if they exist
+        for rule, value in obj.rules.items():
+            if rule == "energy_boost":
+                obj.energy += value
+            elif rule == "matter_boost":
+                obj.matter += value
         return obj
 
