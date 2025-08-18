@@ -1,50 +1,34 @@
 # core/reasoning_engine.py
-# Version: 2025-08-18 15:30
+# Version: 2025-08-18 16:50
 
-from core.universal_rules import rules
+from core.universal_rules import UniversalRules
 
 class ReasoningEngine:
     def __init__(self):
-        self.rules = rules
+        self.rules = UniversalRules().list_rules()
+        self.observations = []
 
-    def list_rules(self):
-        """Return all loaded rules with their descriptions."""
-        return [(r["name"], r["description"]) for r in self.rules]
-
-    def apply_rules(self, observation):
+    def add_observation(self, observation):
         """
-        Apply universal rules to an observation.
-        Returns a list of insights based on matching rules.
+        Add a new observation to the reasoning engine.
+        Each observation should be a dictionary with keys like 'id', 'description', 'type'.
         """
-        insights = []
-        for rule in self.rules:
-            # Simple logic: if a keyword in observation matches a rule name or description, note it
-            if rule["name"].lower() in observation.lower() or any(
-                kw.lower() in observation.lower() for kw in rule.get("keywords", [])
-            ):
-                insights.append(f"Rule '{rule['name']}' applies: {rule['description']}")
-        return insights
+        self.observations.append(observation)
 
-    def reason(self, observation):
+    def analyze(self):
         """
-        Generate reasoning output for an observation.
-        Currently a basic match-based reasoning.
+        Basic analysis: match observations to universal rules.
+        Returns a list of tuples (observation_id, matched_rule_id).
         """
-        insights = self.apply_rules(observation)
-        if not insights:
-            insights.append("No direct universal rule applies, further exploration needed.")
-        return insights
-
-
-# Test block
-if __name__ == "__main__":
-    engine = ReasoningEngine()
-    print("Loaded Rules:")
-    for name, desc in engine.list_rules():
-        print(f"- {name}: {desc}")
-
-    test_obs = "Observing natural cycles and cause-effect patterns"
-    print("\nReasoning on test observation:")
-    for insight in engine.reason(test_obs):
-        print(f"- {insight}")
+        results = []
+        for obs in self.observations:
+            matched_rules = []
+            for rule in self.rules:
+                if rule['type'] == obs.get('type'):
+                    matched_rules.append(rule['id'])
+            results.append({
+                "observation_id": obs.get("id"),
+                "matched_rules": matched_rules
+            })
+        return results
 
