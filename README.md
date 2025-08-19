@@ -1,5 +1,3 @@
----
-
 # pre-ULAI
 
 **Pre-Unified Logic AI (pre-ULAI)** is an experimental project exploring how basic universal reasoning seeds can be encoded, tested, and gradually expanded into more complex logic structures.
