@@ -1,7 +1,3 @@
-Got it 👍 — I’ll give you the **full rewritten `README.md`** as a single Markdown file without mixing code block formatting outside where it’s really needed. That way you can just copy-paste and save directly as `README.md`.
-
-Here’s the clean version:
-
 ---
 
 # pre-ULAI
@@ -65,8 +61,4 @@ This project is currently **exploratory** and has no formal license.
 Use, share, and adapt freely with attribution.
 
 ---
-
-✅ This one you can drop in directly as `README.md` with no formatting issues.
-
-Do you want me to also draft the first **README\_CONTINUE.md** right away so the link doesn’t point to an empty file?
 
