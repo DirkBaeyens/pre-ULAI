@@ -22,3 +22,13 @@ This file tracks the history of changes and updates to the pre-ULAI project.
 - Added/removed/modified files.
 - Any notes about logic evolution.
 
+---
+
+### 2025-08-19
+
+* Rewrote `README.md` for clarity and consistency
+* Added `README_CONTINUE.md` as a guide for session continuation
+* Updated `sessions/` folder organization and continuation workflow
+
+---
+
