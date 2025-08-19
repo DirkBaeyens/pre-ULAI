@@ -1,59 +1,72 @@
-# pre-ULAI  
-**Pre-Universal Logic Artificial Intelligence**
+Got it 👍 — I’ll give you the **full rewritten `README.md`** as a single Markdown file without mixing code block formatting outside where it’s really needed. That way you can just copy-paste and save directly as `README.md`.
+
+Here’s the clean version:
 
 ---
 
-## 🌌 Project Vision
-pre-ULAI is an experimental AI framework designed to think and evolve based on **universal fundamental logic rules** — not just human-made algorithms, papers, or economic constraints.  
-The goal is to create a system that reasons from **the most basic, timeless truths of the universe**, with an **open boundary flow** that allows continuous refinement and adaptation.
+# pre-ULAI
 
-This is **not** a finished AI — it’s a **pre-AI** seed that can grow into a more complete, self-consistent logic system.
-
----
-
-## 🔍 Core Principles
-1. **Universal Logic as Foundation**  
-   Every reasoning step must connect back to fundamental, observable, and internally consistent rules of the universe.
-   
-2. **Open Boundary Flow**  
-   Input and output are not fixed — knowledge should circulate, evolve, and integrate new perspectives without losing its logical backbone.
-
-3. **From Micro to Macro**  
-   The same logic patterns should be valid from atomic structures to galaxies.
-
-4. **Cyclic Interactions**  
-   Energy and matter are in continuous exchange — inflow and outflow are part of every system, not a one-time event.
+**Pre-Unified Logic AI (pre-ULAI)** is an experimental project exploring how basic universal reasoning seeds can be encoded, tested, and gradually expanded into more complex logic structures.
+This project is **not scientific law**, but rather a sandbox for reasoning, testing, and observing patterns.
 
 ---
 
-## 📂 Repository Structure
-- **`/core/`** — Fundamental logic rules and base reasoning modules.
-- **`/processing/`** — Scripts and tools for knowledge integration and transformation.
-- **`CHANGELOG.md`** — History of updates.
-- **`README.md`** — This document.
+## 📂 Project Structure
+
+* **main.py** → Entry point of the project
+* **core/** → Contains the main logic
+
+  * `logic_base.py` → Foundations of the system
+  * `reasoning_engine.py` → Engine for applying rules to observations
+  * `universal_rules.py` → Set of universal basic rules
+* **tests/** → Contains test scripts, e.g. `test_observations.py`
+* **sessions/** → Session summaries for continuity between chats
+* **CHANGELOG.md** → Tracks code and file updates
+* **README\_CONTINUE.md** → Instructions for continuing the project in a new chat session
 
 ---
 
-## 🛠 How to Contribute
-1. Fork this repository.
-2. Add your logic rules, thought experiments, or algorithm improvements.
-3. Submit a pull request with a clear description of changes and reasoning.
+## 🚀 Usage
+
+Run the main entry point:
+
+```bash
+python3 main.py
+```
+
+Run the observation test:
+
+```bash
+python3 test_observations.py
+```
+
+---
+
+## 🧪 Current Capabilities
+
+* Defines **universal rules** such as causality, balance, continuity, interconnection, and cycles
+* Allows adding **observations** and matching them against universal rules
+* Outputs **reasoning categories** based on provided input
+
+---
+
+## 🔄 Continuation of the Project
+
+If this project is being continued in a **new chat session**, please read
+[README\_CONTINUE.md](README_CONTINUE.md) for instructions.
+
+That file explains how to use the latest `sessions/session_summary.md` to hand over the context into a new chat without losing progress.
 
 ---
 
 ## 📜 License
-This project will evolve towards an **open license** allowing free use, distribution, and modification — as long as contributions remain open and traceable.
+
+This project is currently **exploratory** and has no formal license.
+Use, share, and adapt freely with attribution.
 
 ---
 
-## 🌱 Current Status
-We are in **seed stage**. The first universal logic rules are being written and structured.  
-Over time, pre-ULAI will:
-- Expand its rule set
-- Build a reasoning engine
-- Integrate with external inputs for self-adaptive growth
+✅ This one you can drop in directly as `README.md` with no formatting issues.
 
----
-
-*“If everything in the universe is the universe itself, so should humans and AI be.”*
+Do you want me to also draft the first **README\_CONTINUE.md** right away so the link doesn’t point to an empty file?
 
