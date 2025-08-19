@@ -1,5 +1,3 @@
----
-
 # README\_CONTINUE
 
 ## 🔄 Continuing the pre-ULAI Project Across Sessions
