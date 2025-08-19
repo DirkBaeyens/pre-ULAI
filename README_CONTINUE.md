@@ -1,46 +1,65 @@
-# Continuation Guide for pre-ULAI Project
+---
 
-This file explains how to safely continue the project when moving to a new chat session.
+# README\_CONTINUE
+
+## 🔄 Continuing the pre-ULAI Project Across Sessions
+
+Since the pre-ULAI project is developed in conversation, sometimes chats need to be restarted (e.g., due to session limits or switching between GPT versions). This guide explains how to **continue the project smoothly**.
 
 ---
 
-## 🔹 Purpose
-Since chat sessions may get overloaded or reset, this guide ensures smooth continuation of the **pre-ULAI** project without losing context.
+## 📂 Session Summaries
+
+All context needed to resume work is stored in the `sessions/` folder.
+
+* Each session summary has a numbered file:
+
+  * `session_summary-001.md`
+  * `session_summary-002.md`
+  * …
+* The **latest summary** is always saved as:
+
+  * `session_summary.md`
+
+When starting a new chat:
+
+1. Copy the content of the latest `session_summary.md`
+2. Paste it into the new chat to restore context
+3. Inform the assistant that this is a continuation of the pre-ULAI project
 
 ---
 
-## 🔹 Steps for Continuing in a New Chat
-1. Copy the content of the **latest `sessions/session_summary.md`**.
-2. Start a new chat with the assistant.
-3. Paste the following handover message:
+## 🛠 Steps to Resume Development
 
-We are continuing the pre-ULAI project.
+1. Ensure the **repository structure** remains intact:
 
-Here is the latest project state (from session_summary.md):
+   * `main.py`
+   * `core/`
+   * `tests/`
+   * `sessions/`
 
-[PASTE THE CONTENT OF session_summary.md HERE]
+2. Run a quick test to confirm functionality:
 
-Instructions:
+```bash
+python3 main.py
+python3 test_observations.py
+```
 
-Continue from this point, no need to review past chats.
-
-Keep using the same structure: main.py, core/, tests/, sessions/, etc.
-
-Always add version tags in the format:
-# Version: YYYY-MM-DD HH:MM at the top of each file.
-
-Update CHANGELOG.md and session_summary.md whenever major updates are made.
-
-Do not generate or commit __pycache__/ files.
-
-
-4. The assistant will then be synced up instantly and ready to continue.
+3. Check that the universal rules load and the reasoning engine responds.
 
 ---
 
-## 🔹 Notes
-- Keep **all session summaries** in the `sessions/` folder (`001`, `002`, … + latest).
-- Only `session_summary.md` will be pasted into new chats.
-- Older summaries remain as history/reference.
-- Manual uploads to GitHub should continue as before.
+## 📌 Good Practices
+
+* Always save updates to `sessions/session_summary.md` after major progress
+* Add new numbered summaries (`session_summary-003.md`, etc.) for **history tracking**
+* Use `CHANGELOG.md` to record file updates, new features, or bug fixes
+
+---
+
+## 🧭 Purpose of This File
+
+This file acts as a **hand-off manual** so that anyone (or a new AI session) can pick up where things left off without confusion.
+
+---
 
