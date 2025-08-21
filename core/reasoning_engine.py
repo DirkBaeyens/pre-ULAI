@@ -1,93 +1,54 @@
 # core/reasoning_engine.py
-# Version: 2025-08-19 22:35
-
+# Version: 2025-08-20 00:05
 """
 Reasoning Engine
 ----------------
-This module applies universal reasoning rules to input observations.
+Loads universal rules and applies reasoning to input text.
+Now supports:
+- Keyword-based matching for explicit rules.
+- Hybrid rule activation when parent rules are both triggered.
+- Hidden rules remain dormant unless explicitly linked in the future.
 """
 
+import re
 from core.universal_rules import UNIVERSAL_RULES
+
 
 class ReasoningEngine:
     def __init__(self):
         self.rules = UNIVERSAL_RULES
+        # Index for easier lookup
+        self.rule_dict = {rule["id"]: rule for rule in self.rules}
 
-    def apply_rules(self, observation):
+    def analyze(self, text):
         """
-        Apply universal rules to a given observation.
-        
-        Parameters:
-            observation (str or dict): Input observation.
-        
-        Returns:
-            dict: reasoning trace with matched rules and explanations.
+        Analyze input text and return matching rules and hybrid activations.
         """
-        obs_text = str(observation).lower()
-        results = []
+        text = text.lower()
+        activated = []
 
+        # Step 1: Match by keyword from description
         for rule in self.rules:
-            score, hits = self._match_score(obs_text, rule)
-            if score > 0:
-                results.append({
-                    "rule_id": rule["id"],
-                    "description": rule["description"],
-                    "match": True,
-                    "confidence": round(score, 2),
-                    "hits": hits,
-                    "explanation": f"Observation relates to '{rule['id']}' ({rule['type']})."
-                })
+            if rule["type"] in ["hidden", "hybrid"]:
+                continue  # Skip hidden/hybrids in keyword search
+            keywords = re.findall(r"\w+", rule["description"].lower())
+            if any(kw in text for kw in keywords if len(kw) > 4):  # ignore very short words
+                activated.append(rule["id"])
 
-        return {
-            "observation": observation,
-            "matches": results if results else [{"match": False, "explanation": "No universal rule matched."}]
-        }
+        # Step 2: Trigger hybrid rules based on parent references
+        for rule in self.rules:
+            if rule["type"] != "hybrid":
+                continue
+            # description format: "Cross-rule: parentA × parentB."
+            if "×" in rule["description"]:
+                parents = [p.strip() for p in rule["description"].split("×")]
+                if len(parents) == 2:
+                    if parents[0] in activated and parents[1] in activated:
+                        activated.append(rule["id"])
 
-    def _match_score(self, obs_text, rule):
-        """
-        Improved matcher with scoring.
-        Returns (score, hits).
-        """
-        keyword_map = {
-            # --- Layer 1 ---
-            "cause_effect": ["cause", "effect", "because", "due to", "trigger", "reaction"],
-            "balance_flow": ["balance", "flow", "equilibrium", "stability", "adjust", "restore"],
-            "continuity": ["energy", "transform", "circulate", "change", "convert", "conserve"],
-            "interconnection": ["connected", "relation", "link", "interaction", "network", "web"],
-            "cycles": ["cycle", "repeat", "pattern", "recurring", "loop", "season", "rotation"],
+        # Deduplicate
+        activated = list(set(activated))
 
-            # --- Layer 2 ---
-            # cause_effect expansions
-            "chain_reaction": ["chain", "cascade", "domino", "sequence"],
-            "hidden_cause": ["hidden", "unseen", "unknown origin", "underlying"],
-
-            # balance_flow expansions
-            "overcompensation": ["overcorrect", "overshoot", "swing too far", "overbalance"],
-            "feedback_loop": ["feedback", "self-regulate", "reinforce", "dampen"],
-
-            # continuity expansions
-            "transformation": ["transform", "shift", "convert", "metamorphosis"],
-            "storage_release": ["store", "stored", "release", "accumulate", "reserve"],
-
-            # interconnection expansions
-            "mutual_dependence": ["depend", "mutual", "symbiosis", "cooperate", "interdependence"],
-            "indirect_link": ["indirect", "mediated", "through", "via", "intermediary"],
-
-            # cycles expansions
-            "spiral_growth": ["spiral", "evolve", "growth", "progressive", "expansion"],
-            "phase_transition": ["phase", "threshold", "transition", "state change", "shift"]
-        }
-
-        hits = []
-        score = 0
-
-        for kw in keyword_map.get(rule["id"], []):
-            if kw in obs_text:
-                hits.append(kw)
-                score += 1
-
-        # Normalize score (0.0 – 1.0 scale)
-        if hits:
-            score = score / len(keyword_map[rule["id"]])
-        return score, hits
+        # Step 3: Return rule details
+        return [self.rule_dict[rid] for rid in activated]
 
