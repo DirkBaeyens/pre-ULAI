@@ -1,5 +1,5 @@
 # core/reasoning_engine.py
-# Version: 2025-08-19 21:10
+# Version: 2025-08-19 21:40
 
 """
 Reasoning Engine
@@ -27,11 +27,14 @@ class ReasoningEngine:
         results = []
 
         for rule in self.rules:
-            if self._matches_rule(obs_text, rule):
+            score, hits = self._match_score(obs_text, rule)
+            if score > 0:
                 results.append({
                     "rule_id": rule["id"],
                     "description": rule["description"],
                     "match": True,
+                    "confidence": round(score, 2),
+                    "hits": hits,
                     "explanation": f"Observation relates to '{rule['id']}' ({rule['type']})."
                 })
 
@@ -40,20 +43,29 @@ class ReasoningEngine:
             "matches": results if results else [{"match": False, "explanation": "No universal rule matched."}]
         }
 
-    def _matches_rule(self, obs_text, rule):
+    def _match_score(self, obs_text, rule):
         """
-        Simple heuristic matcher for rules.
-        (Temporary until symbolic/semantic reasoning is added.)
+        Improved matcher with scoring.
+        Returns (score, hits).
         """
-        keywords = {
-            "cause_effect": ["cause", "effect", "because", "reaction"],
-            "balance_flow": ["balance", "flow", "equilibrium", "stability"],
-            "continuity": ["energy", "transform", "circulate", "change"],
-            "interconnection": ["connected", "relation", "link", "interaction"],
-            "cycles": ["cycle", "repeat", "pattern", "recurring", "loop"]
+        keyword_map = {
+            "cause_effect": ["cause", "effect", "because", "due to", "trigger", "reaction"],
+            "balance_flow": ["balance", "flow", "equilibrium", "stability", "adjust", "restore"],
+            "continuity": ["energy", "transform", "circulate", "change", "convert", "conserve"],
+            "interconnection": ["connected", "relation", "link", "interaction", "network", "web"],
+            "cycles": ["cycle", "repeat", "pattern", "recurring", "loop", "season", "rotation"]
         }
-        for kw in keywords.get(rule["id"], []):
+
+        hits = []
+        score = 0
+
+        for kw in keyword_map.get(rule["id"], []):
             if kw in obs_text:
-                return True
-        return False
+                hits.append(kw)
+                score += 1
+
+        # Normalize score (0.0 – 1.0 scale)
+        if hits:
+            score = score / len(keyword_map[rule["id"]])
+        return score, hits
 
