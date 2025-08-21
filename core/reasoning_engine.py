@@ -1,54 +1,56 @@
 # core/reasoning_engine.py
-# Version: 2025-08-20 00:05
+# Version: 2025-08-19 23:30
+
 """
 Reasoning Engine
 ----------------
-Loads universal rules and applies reasoning to input text.
-Now supports:
-- Keyword-based matching for explicit rules.
-- Hybrid rule activation when parent rules are both triggered.
-- Hidden rules remain dormant unless explicitly linked in the future.
+Applies universal rules to given observations.
+Now also aware of kernel and candidate rules.
 """
 
-import re
 from core.universal_rules import UNIVERSAL_RULES
+from core.rule_registry import KERNEL_RULES, CANDIDATE_RULES
 
 
 class ReasoningEngine:
     def __init__(self):
-        self.rules = UNIVERSAL_RULES
-        # Index for easier lookup
-        self.rule_dict = {rule["id"]: rule for rule in self.rules}
+        self.kernel_rules = {rule["id"]: rule for rule in UNIVERSAL_RULES if rule["id"] in KERNEL_RULES}
+        self.candidate_rules = {rule["id"]: rule for rule in CANDIDATE_RULES}
 
-    def analyze(self, text):
+    def apply_rules(self, observation: str):
         """
-        Analyze input text and return matching rules and hybrid activations.
+        Apply kernel rules to an observation and annotate candidate awareness.
         """
-        text = text.lower()
-        activated = []
+        results = []
 
-        # Step 1: Match by keyword from description
-        for rule in self.rules:
-            if rule["type"] in ["hidden", "hybrid"]:
-                continue  # Skip hidden/hybrids in keyword search
-            keywords = re.findall(r"\w+", rule["description"].lower())
-            if any(kw in text for kw in keywords if len(kw) > 4):  # ignore very short words
-                activated.append(rule["id"])
+        # --- Apply kernel rules ---
+        for rule_id, rule in self.kernel_rules.items():
+            if rule["id"] in observation or any(word in observation for word in rule["description"].split()):
+                results.append({
+                    "rule": rule["id"],
+                    "type": "kernel",
+                    "explanation": f"Matched kernel rule '{rule['id']}' → {rule['description']}"
+                })
 
-        # Step 2: Trigger hybrid rules based on parent references
-        for rule in self.rules:
-            if rule["type"] != "hybrid":
-                continue
-            # description format: "Cross-rule: parentA × parentB."
-            if "×" in rule["description"]:
-                parents = [p.strip() for p in rule["description"].split("×")]
-                if len(parents) == 2:
-                    if parents[0] in activated and parents[1] in activated:
-                        activated.append(rule["id"])
+        # --- Awareness of candidate rules ---
+        candidate_refs = []
+        for rule_id, rule in self.candidate_rules.items():
+            if rule["id"] in observation or any(word in observation for word in rule["description"].split()):
+                candidate_refs.append(rule_id)
 
-        # Deduplicate
-        activated = list(set(activated))
+        if candidate_refs:
+            results.append({
+                "rule": "candidate_reference",
+                "type": "candidate",
+                "explanation": f"Observation hints at candidate rules: {', '.join(candidate_refs)}"
+            })
 
-        # Step 3: Return rule details
-        return [self.rule_dict[rid] for rid in activated]
+        if not results:
+            results.append({
+                "rule": "none",
+                "type": "unknown",
+                "explanation": "No clear kernel rule matched. Candidate awareness noted."
+            })
+
+        return results
 
