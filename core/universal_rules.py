@@ -1,5 +1,5 @@
 # core/universal_rules.py
-# Version: 2025-08-19 22:20
+# Version: 2025-08-19 23:15
 """
 Universal Basic Logic Rules
 ---------------------------
@@ -8,6 +8,7 @@ These are not scientific laws but simple universal reasoning seeds.
 
 Layer 1 → Root rules (5)
 Layer 2 → Expanded rules (10)
+Layer 3 → Interlinked & hidden rules (8)
 """
 
 UNIVERSAL_RULES = [
@@ -97,6 +98,51 @@ UNIVERSAL_RULES = [
         "id": "phase_transition",
         "description": "Cycles include thresholds where states change dramatically.",
         "type": "time"
+    },
+
+    # --- Layer 3: Interlinked Rules ---
+    # Cross-pair rules
+    {
+        "id": "cascade_balance",
+        "description": "Cross-rule: chain_reaction × balance_flow.",
+        "type": "hybrid"
+    },
+    {
+        "id": "latent_cycle",
+        "description": "Cross-rule: hidden_cause × cycles.",
+        "type": "hybrid"
+    },
+    {
+        "id": "stored_connection",
+        "description": "Cross-rule: storage_release × interconnection.",
+        "type": "hybrid"
+    },
+    {
+        "id": "spiral_feedback",
+        "description": "Cross-rule: spiral_growth × feedback_loop.",
+        "type": "hybrid"
+    },
+    {
+        "id": "phase_dependency",
+        "description": "Cross-rule: phase_transition × mutual_dependence.",
+        "type": "hybrid"
+    },
+
+    # Hidden / non-detectable rules
+    {
+        "id": "invisible_equilibrium",
+        "description": "Hidden rule: undetectable balance mechanism.",
+        "type": "hidden"
+    },
+    {
+        "id": "dark_linkage",
+        "description": "Hidden rule: undetectable relation pathway.",
+        "type": "hidden"
+    },
+    {
+        "id": "silent_cause",
+        "description": "Hidden rule: undetectable cause with observable effects.",
+        "type": "hidden"
     }
 ]
 
