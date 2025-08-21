@@ -1,39 +1,42 @@
 # test_observations.py
-# Version: 2025-08-20 00:25
+# Version: 2025-08-19 23:45
+
 """
 Test Observations
 -----------------
-Runs text inputs through the ReasoningEngine to see which universal rules
-are triggered. Now also tests hybrid rule activations.
+Run sample observations through the ReasoningEngine.
+Now also checks for candidate rule awareness.
 """
 
 from core.reasoning_engine import ReasoningEngine
 
+engine = ReasoningEngine()
 
-def run_tests():
-    engine = ReasoningEngine()
+# Define test observations
+OBSERVATIONS = [
+    # Kernel rule triggers
+    "If you push something, it pushes back because every action has a reaction.",
+    "Heat moves from hot to cold until balance is reached.",
+    "Nothing disappears, energy circulates instead of vanishing.",
+    "The Earth and Moon are interconnected through gravity.",
+    "Seasons repeat in cycles over time.",
 
-    test_cases = [
-        # Base rules
-        "Every action causes a reaction, and sometimes hidden causes appear.",
-        "Flows always move toward balance, but sometimes overshoot the goal.",
-        "Energy does not vanish, it only transforms and circulates in cycles.",
-        "Everything is connected, even indirectly through hidden links.",
-        "Time repeats itself in cycles, sometimes spiraling forward.",
+    # Candidate rule hints
+    "The human body is symmetric, left and right mirror each other.",
+    "Systems often return feedback that stabilizes them.",
+    "Small causes can trigger large effects like avalanches.",
+    "Patterns emerge when simple rules combine.",
+    "Some interactions seem hidden but influence outcomes.",
 
-        # Hybrid triggers
-        "One event sparks another, creating a chain reaction, but balance is also restored.",
-        "Energy is stored and then released, making cycles stronger over time.",
-        "Things depend on each other, and together they spiral into new growth.",
-    ]
+    # Unknown case
+    "A cat jumps over the fence."
+]
 
-    for i, text in enumerate(test_cases, 1):
-        activated = engine.analyze(text)
-        print(f"\nTest {i}: {text}")
-        for rule in activated:
-            print(f" - {rule['id']}: {rule['description']} (type: {rule['type']})")
-
-
-if __name__ == "__main__":
-    run_tests()
+print("\n--- Running Observations through ReasoningEngine ---\n")
+for obs in OBSERVATIONS:
+    print(f"Observation: {obs}")
+    results = engine.apply_rules(obs)
+    for r in results:
+        print(f"  - [{r['type']}] {r['explanation']}")
+    print()
 
