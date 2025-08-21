@@ -1,5 +1,5 @@
 # core/reasoning_engine.py
-# Version: 2025-08-19 21:40
+# Version: 2025-08-19 22:35
 
 """
 Reasoning Engine
@@ -49,11 +49,33 @@ class ReasoningEngine:
         Returns (score, hits).
         """
         keyword_map = {
+            # --- Layer 1 ---
             "cause_effect": ["cause", "effect", "because", "due to", "trigger", "reaction"],
             "balance_flow": ["balance", "flow", "equilibrium", "stability", "adjust", "restore"],
             "continuity": ["energy", "transform", "circulate", "change", "convert", "conserve"],
             "interconnection": ["connected", "relation", "link", "interaction", "network", "web"],
-            "cycles": ["cycle", "repeat", "pattern", "recurring", "loop", "season", "rotation"]
+            "cycles": ["cycle", "repeat", "pattern", "recurring", "loop", "season", "rotation"],
+
+            # --- Layer 2 ---
+            # cause_effect expansions
+            "chain_reaction": ["chain", "cascade", "domino", "sequence"],
+            "hidden_cause": ["hidden", "unseen", "unknown origin", "underlying"],
+
+            # balance_flow expansions
+            "overcompensation": ["overcorrect", "overshoot", "swing too far", "overbalance"],
+            "feedback_loop": ["feedback", "self-regulate", "reinforce", "dampen"],
+
+            # continuity expansions
+            "transformation": ["transform", "shift", "convert", "metamorphosis"],
+            "storage_release": ["store", "stored", "release", "accumulate", "reserve"],
+
+            # interconnection expansions
+            "mutual_dependence": ["depend", "mutual", "symbiosis", "cooperate", "interdependence"],
+            "indirect_link": ["indirect", "mediated", "through", "via", "intermediary"],
+
+            # cycles expansions
+            "spiral_growth": ["spiral", "evolve", "growth", "progressive", "expansion"],
+            "phase_transition": ["phase", "threshold", "transition", "state change", "shift"]
         }
 
         hits = []
