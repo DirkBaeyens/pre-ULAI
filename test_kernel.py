@@ -1,62 +1,58 @@
-# test_kernel.py
-# Version: 2025-08-22
+# core/test_kernel.py
+# Version: 2025-08-22 20:45
+
 import json
 from core.universal_rules import UNIVERSAL_RULES
 from core.candidate_rules import CANDIDATE_RULES
 
-# Keywords extracted from candidate rules (simple for now)
-KEYWORDS = [c["id"].replace("cand_", "").replace("_rule", "") for c in CANDIDATE_RULES]
+# Stopwords to ignore in story matching
+STOPWORDS = ["it", "these", "from", "at", "that", "other", "a", "an", "the", "is", "are"]
 
-def match_rules(story_text):
-    story_words = story_text.lower().split()
+def extract_keywords(story):
+    """Simple keyword extraction: lowercase, split, remove stopwords"""
+    words = story.lower().replace(".", "").replace(",", "").split()
+    keywords = [w for w in words if w not in STOPWORDS]
+    return set(keywords)
+
+def check_story(story):
+    keywords = extract_keywords(story)
+
     matches = []
     new_candidates = []
+    discarded = []
 
     # Check universal rules
     for rule in UNIVERSAL_RULES:
-        for kw in story_words:
-            if kw in rule["description"].lower() or kw in rule["id"]:
-                matches.append(rule)
-                break
+        rule_words = set(rule["description"].lower().split())
+        rule_keywords = rule_words - set(STOPWORDS)
+        if keywords & rule_keywords:
+            matches.append(rule)
 
     # Check candidate rules
-    cluster_matches = {}
-    for candidate in CANDIDATE_RULES:
-        candidate_id = candidate["id"]
-        cluster = candidate.get("cluster", "Unclustered")
-        if any(kw in story_words for kw in candidate_id.lower().split("_")):
-            if cluster not in cluster_matches:
-                cluster_matches[cluster] = []
-            cluster_matches[cluster].append(candidate)
+    for rule in CANDIDATE_RULES:
+        rule_words = set(rule["description"].lower().split())
+        rule_keywords = rule_words - set(STOPWORDS)
+        if keywords & rule_keywords:
+            if rule_keywords:
+                new_candidates.append(rule)
+            else:
+                # Only meaningless words matched
+                rule_copy = rule.copy()
+                rule_copy["status"] = "discarded"
+                discarded.append(rule_copy)
 
-    return matches, cluster_matches, new_candidates
+    result = {
+        "story": story,
+        "matches": matches,
+        "new_candidates": new_candidates,
+        "discarded": discarded
+    }
 
-def interactive_input():
-    print("Enter your story (or 'quit' to exit):")
-    while True:
-        story_text = input("> ")
-        if story_text.lower() in ("quit", "exit"):
-            break
-
-        matches, cluster_matches, new_candidates = match_rules(story_text)
-
-        print("\n=== Universal Rule Matches ===")
-        for m in matches:
-            print(f"- {m['id']}: {m['description']} [{m['type']}]")
-
-        print("\n=== Candidate Rule Matches (clustered) ===")
-        for cluster, candidates in cluster_matches.items():
-            print(f"\n--- Cluster: {cluster} ---")
-            for c in candidates:
-                print(f"- {c['id']}: {c['description']} [status: {c['status']}]")
-
-        if new_candidates:
-            print("\n=== New Candidate Suggestions ===")
-            for nc in new_candidates:
-                print(f"- {nc['description']}")
-
-        print("\nEnter next story or 'quit' to exit:")
+    return result
 
 if __name__ == "__main__":
-    interactive_input()
+    # Example story for testing
+    story_input = "A lightning needs grounding to release energy."
+    result = check_story(story_input)
+    print(json.dumps(result, indent=4))
 
