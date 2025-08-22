@@ -1,86 +1,62 @@
 # test_kernel.py
 # Version: 2025-08-22
-"""
-Test Harness for Universal Rules
---------------------------------
-Takes a story or description and checks it against the universal rules.
-"""
-
-import re
+import json
 from core.universal_rules import UNIVERSAL_RULES
+from core.candidate_rules import CANDIDATE_RULES
 
-def match_rules(story: str):
-    """
-    Match a story against the universal rules.
-    Returns a report of which rules matched, conflicts, and gaps.
-    """
-    story_lower = story.lower()
-    matched = []
-    candidates = []
+# Keywords extracted from candidate rules (simple for now)
+KEYWORDS = [c["id"].replace("cand_", "").replace("_rule", "") for c in CANDIDATE_RULES]
 
-    # Simple keyword map (expandable later)
-    keyword_map = {
-        "cause_effect": ["cause", "effect", "reaction", "trigger"],
-        "balance_flow": ["balance", "equilibrium", "flow", "imbalance"],
-        "continuity": ["transform", "circulate", "convert", "does not vanish"],
-        "interconnection": ["link", "connected", "relation", "network"],
-        "cycles": ["cycle", "repeat", "oscillate", "return"],
+def match_rules(story_text):
+    story_words = story_text.lower().split()
+    matches = []
+    new_candidates = []
 
-        # Expanded
-        "chain_reaction": ["cascade", "chain", "domino"],
-        "hidden_cause": ["hidden", "invisible", "unknown", "unseen"],
-        "overcompensation": ["swing", "overshoot"],
-        "feedback_loop": ["feedback", "loop", "self regulate"],
-        "transformation": ["change", "transform", "convert"],
-        "storage_release": ["store", "release", "build up"],
-        "mutual_dependence": ["depend", "support each other"],
-        "indirect_link": ["indirect", "via", "through"],
-        "spiral_growth": ["spiral", "evolve", "growth"],
-        "phase_transition": ["threshold", "phase", "sudden change"],
-
-        # Completion
-        "cycle_completion": ["complete cycle", "close loop", "full circle"],
-        "waveform_completeness": ["wave", "peak", "trough", "amplitude"],
-        "balance_between_extremes": ["opposite", "extreme", "middle", "balance"],
-    }
-
+    # Check universal rules
     for rule in UNIVERSAL_RULES:
-        rid = rule["id"]
-        if rid in keyword_map:
-            for kw in keyword_map[rid]:
-                if kw in story_lower:
-                    matched.append(rule)
-                    break
+        for kw in story_words:
+            if kw in rule["description"].lower() or kw in rule["id"]:
+                matches.append(rule)
+                break
 
-    # Detect conflicts (simple example: story says "vanish" → violates continuity)
-    conflicts = []
-    if "vanish" in story_lower or "disappear" in story_lower:
-        conflicts.append("continuity")
+    # Check candidate rules
+    cluster_matches = {}
+    for candidate in CANDIDATE_RULES:
+        candidate_id = candidate["id"]
+        cluster = candidate.get("cluster", "Unclustered")
+        if any(kw in story_words for kw in candidate_id.lower().split("_")):
+            if cluster not in cluster_matches:
+                cluster_matches[cluster] = []
+            cluster_matches[cluster].append(candidate)
 
-    return {
-        "matched": matched,
-        "conflicts": conflicts,
-        "candidates": candidates
-    }
+    return matches, cluster_matches, new_candidates
+
+def interactive_input():
+    print("Enter your story (or 'quit' to exit):")
+    while True:
+        story_text = input("> ")
+        if story_text.lower() in ("quit", "exit"):
+            break
+
+        matches, cluster_matches, new_candidates = match_rules(story_text)
+
+        print("\n=== Universal Rule Matches ===")
+        for m in matches:
+            print(f"- {m['id']}: {m['description']} [{m['type']}]")
+
+        print("\n=== Candidate Rule Matches (clustered) ===")
+        for cluster, candidates in cluster_matches.items():
+            print(f"\n--- Cluster: {cluster} ---")
+            for c in candidates:
+                print(f"- {c['id']}: {c['description']} [status: {c['status']}]")
+
+        if new_candidates:
+            print("\n=== New Candidate Suggestions ===")
+            for nc in new_candidates:
+                print(f"- {nc['description']}")
+
+        print("\nEnter next story or 'quit' to exit:")
 
 if __name__ == "__main__":
-    story = input("Enter your story: ")
-    result = match_rules(story)
-
-    print("\n=== Test Kernel Report ===")
-    print("\nMatched Rules:")
-    for r in result["matched"]:
-        print(f" - {r['id']}: {r['description']}")
-
-    if result["conflicts"]:
-        print("\nConflicts Found:")
-        for c in result["conflicts"]:
-            print(f" - Conflict with rule: {c}")
-
-    if result["candidates"]:
-        print("\nNew Candidate Ideas:")
-        for c in result["candidates"]:
-            print(f" - {c}")
-
-    print("\nDone.")
+    interactive_input()
 
