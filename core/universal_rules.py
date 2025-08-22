@@ -143,6 +143,47 @@ UNIVERSAL_RULES = [
         "id": "silent_cause",
         "description": "Hidden rule: undetectable cause with observable effects.",
         "type": "hidden"
+    },
+
+    # --- Layer 3: Interlinked Rules (continued) ---
+
+    # New rules from cycle/empty/balance reasoning
+    {
+        "id": "cycle_completion",
+        "description": "Cycles include both presence and absence; empty spaces complete the cycle.",
+        "type": "completion"
+    },
+    {
+        "id": "waveform_completeness",
+        "description": "Waves are completed by their missing crest or trough; absence is part of the form.",
+        "type": "completion"
+    },
+    {
+        "id": "balance_between_extremes",
+        "description": "Between any two extremes lies a balanced state or range.",
+        "type": "balance"
+    },
+
+    # --- Candidate rules (proposed but not yet validated) ---
+    {
+        "id": "waveform_as_workform",
+        "description": "A waveform can be seen as the workform of the balance environment between opposites.",
+        "type": "candidate"
+    },
+    {
+        "id": "exchange_of_opposites",
+        "description": "Energy motion can be understood as an exchange between opposing forces.",
+        "type": "candidate"
+    },
+    {
+        "id": "opposite_reaction_strength",
+        "description": "The stronger and closer two opposites are, the stronger their reaction.",
+        "type": "candidate"
+    },
+    {
+        "id": "group_force_effect",
+        "description": "When opposites combine in groups, their collective forces amplify reactions.",
+        "type": "candidate"
     }
 ]
 
